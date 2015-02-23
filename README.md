@@ -3,7 +3,7 @@ This project includes a Dataview automator for the Raspberry Pi.
 
 ## Generating a X.509 Server Certificate
 
-In order to provide secure communications between the RPC consumer and the RPC server, TLS is utilized. You must create a X.509 Server certificate for this to work.
+In order to provide secure communications between the RPC consumer and the RPC server, TLS is utilized. You must create a X.509 Server Certificate for this to work.
 
 <pre>
 openssl genrsa -out server.pem 4096
@@ -13,7 +13,7 @@ openssl req -new -x509 -key server.pem -out cert.pem -days 730
 Once you have generated the private key and certificate, copy the certificate (cert.pem) to the machine the RPC consumer is operating from.
 
 ## Generating Authentication Token
-
+You must generate an Authentication Token of at least 32 characters. You can use openssl with the rand tool as shown below.  
 <pre>
 $ openssl rand -hex 32
 493152a14843198555759262f1bd767235789aebdcc5f1b1f8f2cd3a965c8c7a
