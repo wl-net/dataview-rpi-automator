@@ -35,7 +35,7 @@ class DataviewRaspberryPiAutomator():
       subprocess.Popen("/usr/bin/tvservice -o", shell=True, stdout=subprocess.PIPE).stdout.read()
       return True
 
-    def turn_display_on(self, volume):
+    def turn_display_on(self):
       """
       Sets the volume for the current player instance
       """
@@ -166,7 +166,7 @@ def main():
     f = loop.create_server(
         lambda: DataviewRPCServer(
           {'turn_display_off': lambda: c.turn_display_off(),
-            'turn_display_on': lambda url: c.turn_display_on(),
+            'turn_display_on': lambda: c.turn_display_on(),
           }, os.environ.get('RPCSERVER_TOKEN')
         ),
         args.host, args.port,
