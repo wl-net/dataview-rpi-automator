@@ -32,16 +32,16 @@ class DataviewRaspberryPiAutomator():
       """
       Pause the audio stream.
       """
-      subprocess.Popen("/usr/bin/tvservice -o", shell=True, stdout=PIPE).stdout.read()
+      subprocess.Popen("/usr/bin/tvservice -o", shell=True, stdout=subprocess.PIPE).stdout.read()
       return True
 
     def turn_display_on(self, volume):
       """
       Sets the volume for the current player instance
       """
-      subprocess.Popen("/usr/bin/tvservice -p", shell=True, stdout=PIPE).stdout.read()
-      subprocess.Popen("sudo /bin/chvt 1", shell=True, stdout=PIPE).stdout.read()
-      subprocess.Popen("sudo /bin/chvt 7", shell=True, stdout=PIPE).stdout.read()
+      subprocess.Popen("/usr/bin/tvservice -p", shell=True, stdout=subprocess.PIPE).stdout.read()
+      subprocess.Popen("sudo /bin/chvt 1", shell=True, stdout=subprocess.PIPE).stdout.read()
+      subprocess.Popen("sudo /bin/chvt 7", shell=True, stdout=subprocess.PIPE).stdout.read()
       return True
 
 class DataviewRPCServer(aiohttp.server.ServerHttpProtocol):
