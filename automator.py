@@ -23,6 +23,7 @@ def constant_time_equals(val1, val2):
         result |= ord(x) ^ ord(y)
     return result == 0
 
+import subprocess
 class DataviewRaspberryPiAutomator():
     def __init__(self):
       pass
