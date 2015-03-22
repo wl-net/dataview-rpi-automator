@@ -32,3 +32,9 @@ Be sure that you have generated the X.509 Server Certificate and exported the RP
 <pre>
 $ python3 automator.py --tlscert cert.pem --tlskey server.pem
 </pre>
+
+NOTE: Make sure you are using python 3.4 to run the automator. If you build python as part of the installation process then use the following command:
+
+<pre>
+$ python3 automator.py --tlscert cert.pem --tlskey server.pem
+</pre>
