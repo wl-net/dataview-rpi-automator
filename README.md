@@ -6,7 +6,7 @@ This project includes a Dataview automator for the Raspberry Pi.
 This automator currently supports the following operations:
 
 * Turn the HDMI output off
-* Turn the HDMI output on (requires sudo - see #1)
+* Turn the HDMI output on (requires sudo - see [#1](/../../issues/1))
 
 ## Installing
 
