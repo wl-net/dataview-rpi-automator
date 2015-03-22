@@ -1,6 +1,18 @@
 # Dataview Raspberry Pi Automator
 This project includes a Dataview automator for the Raspberry Pi.
 
+
+## Installing
+
+Installation of the Raspberry Pi Automator is more complicated than other automators due to the outdated version of Python that most Raspberry Pi linux distributions use:
+
+<pre>
+$ python3 --version
+Python 3.2.3
+</pre>
+
+If you do not have at least Python 3.4 and you have fully updated your Raspberry Pi please follow the [Python upgrade guide](https://github.com/wl-net/dataview-rpi-automator/wiki/Installation#installing-python-34).
+
 ## Generating a X.509 Server Certificate
 
 In order to provide secure communications between the RPC consumer and the RPC server, TLS is utilized. You must create a X.509 Server Certificate for this to work.
