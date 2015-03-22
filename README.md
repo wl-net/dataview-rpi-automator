@@ -1,6 +1,12 @@
 # Dataview Raspberry Pi Automator
 This project includes a Dataview automator for the Raspberry Pi.
 
+## Currently Available Features
+
+This automator currently supports the following operations:
+
+* Turn the HDMI output off
+* Turn the HDMI output on (requires sudo - see #1)
 
 ## Installing
 
