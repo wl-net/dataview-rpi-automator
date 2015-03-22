@@ -10,7 +10,7 @@ openssl genrsa -out server.pem 4096
 openssl req -new -x509 -key server.pem -out cert.pem -days 730
 </pre>
 
-Please see the instructions on [https://github.com/wl-net/dataview/wiki/Transports#generating-a-properly-formed-certificate](how to generate a certificate) for information about how to fill out the questions openssl asks.
+Please see the instructions on [how to generate a certificate](https://github.com/wl-net/dataview/wiki/Transports#generating-a-properly-formed-certificate) for information about how to fill out the questions openssl asks.
 
 Once you have generated the private key and certificate, copy the certificate (cert.pem) to the machine the RPC consumer is operating from.
 
