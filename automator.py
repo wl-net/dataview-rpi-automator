@@ -13,7 +13,10 @@ import aiohttp
 import aiohttp.server
 
 from urllib.parse import urlparse, parse_qsl
-from aiohttp.multidict import MultiDict
+try:
+  from aiohttp import MultiDict
+except ImportError:
+  from aiohttp.multidict import MultiDict
 
 def constant_time_equals(val1, val2):
     if len(val1) != len(val2):
