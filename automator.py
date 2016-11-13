@@ -3,7 +3,6 @@ import sys
 assert sys.version >= '3.3', 'Please use Python 3.3 or higher.'
 
 import argparse
-import logging
 import os
 import ssl
 import json
@@ -12,11 +11,11 @@ import asyncio
 import aiohttp
 import aiohttp.server
 
-from urllib.parse import urlparse, parse_qsl
 try:
   from aiohttp import MultiDict
 except ImportError:
   from aiohttp.multidict import MultiDict
+
 
 def constant_time_equals(val1, val2):
     if len(val1) != len(val2):
@@ -27,9 +26,11 @@ def constant_time_equals(val1, val2):
     return result == 0
 
 import subprocess
-class DataviewRaspberryPiAutomator():
+
+
+class DataviewRaspberryPiAutomator(object):
     def __init__(self):
-      pass
+      self.kodi = None
 
     def turn_display_off(self):
       """
@@ -46,6 +47,21 @@ class DataviewRaspberryPiAutomator():
       subprocess.Popen("sudo /bin/chvt 1", shell=True, stdout=subprocess.PIPE).stdout.read()
       subprocess.Popen("sudo /bin/chvt 7", shell=True, stdout=subprocess.PIPE).stdout.read()
       return True
+
+    def start_kodi(self):
+      """Starts kodi and returns to vt7 on exit """
+      self.kodi = subprocess.Popen('kodi && sudo chvt 1 && sudo chvt 7', shell=True)
+      return True
+
+    def stop_kodi(self):
+      if self.kodi:
+        self.kodi.terminate()
+
+      self.kodi.wait()
+      subprocess.Popen('sudo chvt 1 && sudo chvt 7')
+
+      return True
+
 
 class DataviewRPCServer(aiohttp.server.ServerHttpProtocol):
     def __init__(self, dispatch_functions, auth_token):
@@ -168,9 +184,12 @@ def main():
     c = DataviewRaspberryPiAutomator();
     f = loop.create_server(
         lambda: DataviewRPCServer(
-          {'turn_display_off': lambda: c.turn_display_off(),
+          {
+            'turn_display_off': lambda: c.turn_display_off(),
             'turn_display_on': lambda: c.turn_display_on(),
-          }, os.environ.get('RPCSERVER_TOKEN')
+            'start_kodi': lambda: c.start_kodi(),
+            'stop_kodi': lambda: c.stop_kodi(),
+           }, os.environ.get('RPCSERVER_TOKEN')
         ),
         args.host, args.port,
         ssl = sslcontext)
