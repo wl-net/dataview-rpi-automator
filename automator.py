@@ -66,6 +66,23 @@ class DataviewRaspberryPiAutomator(object):
 
     return True
 
+  def mute(self):
+    """
+    Mutes the pulseaudio mixer.
+    :return: Whether or not mute was successful
+    """
+    subprocess.Popen(['sudo', '-u' ,'pulse', 'sh', '-c', 'amixer set Master mute'], stdout=subprocess.PIPE).stdout.read()
+    return True
+
+  def unmute(self):
+    """
+    Unmutes the pulseaudio mixe
+    :return: Whether or not unmute was successful
+    """
+    subprocess.Popen(['sudo', '-u', 'pulse', 'sh', '-c', 'amixer set Master unmute'],
+                     stdout=subprocess.PIPE).stdout.read()
+    return True
+
   def start_kodi(self):
     """Starts kodi and returns to vt7 on exit """
     try:
@@ -91,9 +108,9 @@ class DataviewRaspberryPiAutomator(object):
       for process in self.omxplayer_processes:
         subprocess.call(process)
         self.omxplayer_processes.remove(process)
-      subprocess.Popen(['sudo', '-u', 'pulse', 'sh', '-c', 'amixer set Master unmute'], stdout=subprocess.PIPE).stdout.read()
+      self.unmute()
 
-    subprocess.Popen(['sudo', '-u' ,'pulse', 'sh', '-c', 'amixer set Master mute'], stdout=subprocess.PIPE).stdout.read()
+    self.mute()
     self.kodi = subprocess.Popen('/usr/bin/kodi', shell=False)
     threading.Thread(target=monitor_kodi, args=(self.kodi,)).start()
 
@@ -235,6 +252,8 @@ def main():
     f = loop.create_server(
         lambda: DataviewRPCServer(
           {
+            'mute': lambda: c.mute(),
+            'unmute': lambda: c.unmute(),
             'turn_display_off': lambda: c.turn_display_off(),
             'turn_display_on': lambda: c.turn_display_on(),
             'start_kodi': lambda: c.start_kodi(),
