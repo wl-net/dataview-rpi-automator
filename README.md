@@ -1,5 +1,5 @@
 # Dataview Raspberry Pi Automator
-This project includes a Dataview automator for the Raspberry Pi.
+This project includes a Dataview Atomator for the Raspberry Pi.
 
 ## Currently Available Features
 
@@ -7,10 +7,12 @@ This automator currently supports the following operations:
 
 * Turn the HDMI output off
 * Turn the HDMI output on (requires sudo - see [#1](/../../issues/1))
+* Starting Kodi
+* Stopping Kodi
 
 ## Installing
 
-Installation of the Raspberry Pi Automator is more complicated than other automators due to the outdated version of Python that most Raspberry Pi linux distributions use:
+Installation of the Raspberry Pi Automator can be more complicated than other automators if your operating system uses an outdated version of Python:
 
 <pre>
 $ python3 --version
