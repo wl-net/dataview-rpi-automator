@@ -5,10 +5,12 @@ This project includes a Dataview Atomator for the Raspberry Pi.
 
 This automator currently supports the following operations:
 
-* Turn the HDMI output off
-* Turn the HDMI output on (requires sudo - see [#1](/../../issues/1))
-* Starting Kodi
-* Stopping Kodi
+* Turn the HDMI output off (turn_display_off)
+* Turn the HDMI output on (requires sudo - see [#1](/../../issues/1)) (turn_display_on)
+* Starting Kodi (stop_kodi)
+* Stopping Kodi (start_kodi)
+* Muting pulseaudio (mute)
+* Unmuting pulseaudio (unmute)
 
 ## Installing
 
