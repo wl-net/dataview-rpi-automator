@@ -18,12 +18,12 @@ except ImportError:
 
 
 def constant_time_equals(val1, val2):
-    if len(val1) != len(val2):
-        return False
-    result = 0
-    for x, y in zip(val1, val2):
-        result |= ord(x) ^ ord(y)
-    return result == 0
+  if len(val1) != len(val2):
+    return False
+  result = 0
+  for x, y in zip(val1, val2):
+    result |= ord(x) ^ ord(y)
+  return result == 0
 
 import subprocess
 import threading
@@ -31,86 +31,86 @@ import signal
 
 
 class DataviewRaspberryPiAutomator(object):
-    def __init__(self):
-      self.kodi = None
-      self.omxplayer_processes = []
-      self.display_should_be_on = True
+  def __init__(self):
+    self.kodi = None
+    self.omxplayer_processes = []
+    self.display_should_be_on = True
 
-    def display_status(self):
-      status = subprocess.Popen('/usr/bin/tvservice -o', shell=True, stdout=subprocess.PIPE).stdout.read()
+  def display_status(self):
+    status = subprocess.Popen('/usr/bin/tvservice -o', shell=True, stdout=subprocess.PIPE).stdout.read()
 
-      return status.decode('utf-8') == 'state 0x120002 [TV is off]'
+    return status.decode('utf-8') == 'state 0x120002 [TV is off]'
 
-    def turn_display_off(self, force=False):
-      """
-      Pause the audio stream.
-      """
-      self.display_should_be_on = False
+  def turn_display_off(self, force=False):
+    """
+    Pause the audio stream.
+    """
+    self.display_should_be_on = False
 
-      if self.kodi and not force:
-        return False
+    if self.kodi and not force:
+      return False
 
-      subprocess.Popen('/usr/bin/tvservice -o', shell=True, stdout=subprocess.PIPE).stdout.read()
+    subprocess.Popen('/usr/bin/tvservice -o', shell=True, stdout=subprocess.PIPE).stdout.read()
 
-      return True
+    return True
 
-    def turn_display_on(self):
-      """
-      Sets the volume for the current player instance
-      """
-      self.display_should_be_on = True
+  def turn_display_on(self):
+    """
+    Sets the volume for the current player instance
+    """
+    self.display_should_be_on = True
 
-      subprocess.Popen("/usr/bin/tvservice -p", shell=True, stdout=subprocess.PIPE).stdout.read()
-      subprocess.Popen("sudo /bin/chvt 1", shell=True, stdout=subprocess.PIPE).stdout.read()
-      subprocess.Popen("sudo /bin/chvt 7", shell=True, stdout=subprocess.PIPE).stdout.read()
+    subprocess.Popen("/usr/bin/tvservice -p", shell=True, stdout=subprocess.PIPE).stdout.read()
+    subprocess.Popen("sudo /bin/chvt 1", shell=True, stdout=subprocess.PIPE).stdout.read()
+    subprocess.Popen("sudo /bin/chvt 7", shell=True, stdout=subprocess.PIPE).stdout.read()
 
-      return True
+    return True
 
-    def start_kodi(self):
-      """Starts kodi and returns to vt7 on exit """
-      try:
-        output = subprocess.check_output(['/usr/bin/pgrep', '-x', 'omxplayer']).decode('utf-8').split('\n')
-        del output[-1]
+  def start_kodi(self):
+    """Starts kodi and returns to vt7 on exit """
+    try:
+      output = subprocess.check_output(['/usr/bin/pgrep', '-x', 'omxplayer']).decode('utf-8').split('\n')
+      del output[-1]
 
-        for pid in output:
-          with open('/proc/{}/cmdline'.format(pid), 'r') as cmdline:
-            self.omxplayer_processes.append(cmdline.read().split('\x00'))
-          print('kill {}'.format(pid))
-          os.killpg(int(pid), signal.SIGTERM)
-      except subprocess.CalledProcessError:
-        pass
+      for pid in output:
+        with open('/proc/{}/cmdline'.format(pid), 'r') as cmdline:
+          self.omxplayer_processes.append(cmdline.read().split('\x00'))
+        print('kill {}'.format(pid))
+        os.killpg(int(pid), signal.SIGTERM)
+    except subprocess.CalledProcessError:
+      pass
 
-      def monitor_kodi(kodi):
-        kodi.wait()
-        if not self.display_should_be_on:
+    def monitor_kodi(kodi):
+      kodi.wait()
+      if not self.display_should_be_on:
 
-          print('turn_display_off: {}'.format(self.turn_display_off(force=True)))
+        print('turn_display_off: {}'.format(self.turn_display_off(force=True)))
 
-        subprocess.Popen('sudo chvt 1 && sudo chvt 7', shell=True)
+      subprocess.Popen('sudo chvt 1 && sudo chvt 7', shell=True)
 
-        for process in self.omxplayer_processes:
-          subprocess.call(process)
-          self.omxplayer_processes.remove(process)
-        subprocess.Popen(['sudo', '-u', 'pulse', 'sh', '-c', 'amixer set Master unmute'], stdout=subprocess.PIPE).stdout.read()
+      for process in self.omxplayer_processes:
+        subprocess.call(process)
+        self.omxplayer_processes.remove(process)
+      subprocess.Popen(['sudo', '-u', 'pulse', 'sh', '-c', 'amixer set Master unmute'], stdout=subprocess.PIPE).stdout.read()
 
-      subprocess.Popen(['sudo', '-u' ,'pulse', 'sh', '-c', 'amixer set Master mute'], stdout=subprocess.PIPE).stdout.read()
-      self.kodi = subprocess.Popen('/usr/bin/kodi', shell=False)
-      threading.Thread(target=monitor_kodi, args=(self.kodi,)).start()
+    subprocess.Popen(['sudo', '-u' ,'pulse', 'sh', '-c', 'amixer set Master mute'], stdout=subprocess.PIPE).stdout.read()
+    self.kodi = subprocess.Popen('/usr/bin/kodi', shell=False)
+    threading.Thread(target=monitor_kodi, args=(self.kodi,)).start()
 
-      return True
+    return True
 
-    def stop_kodi(self):
-      if self.kodi:
-        self.kodi.terminate()
+  def stop_kodi(self):
+    if self.kodi:
+      self.kodi.terminate()
 
-        self.kodi.wait()
+      self.kodi.wait()
 
-        subprocess.Popen('pkill kodi', shell=True).wait()
+      subprocess.Popen('pkill kodi', shell=True).wait()
 
-        subprocess.Popen('sudo chvt 1 && sudo chvt 7', shell=True)
-      else:
-        return False
-      return True
+      subprocess.Popen('sudo chvt 1 && sudo chvt 7', shell=True)
+    else:
+      return False
+    return True
 
 
 class DataviewRPCServer(aiohttp.server.ServerHttpProtocol):
@@ -252,4 +252,4 @@ def main():
         pass
 
 if __name__ == '__main__':
-    main()
+  main()
