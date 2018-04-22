@@ -141,6 +141,24 @@ class DataviewRaspberryPiAutomator(object):
 
     return True
 
+  def stop_video(self, file):
+    """
+    Stops a video
+    :return:
+    """
+
+    try:
+      output = subprocess.check_output(['/usr/bin/pgrep', '-x', 'omxplayer']).decode('utf-8').split('\n')
+      del output[-1]
+
+      for pid in output:
+        with open('/proc/{}/cmdline'.format(pid), 'r') as cmdline:
+          if cmdline.read().split('\x00').contains(file):
+            print('kill {}'.format(pid))
+            os.killpg(int(pid), signal.SIGTERM)
+    except subprocess.CalledProcessError:
+      pass
+
 
 class DataviewRPCServer(aiohttp.server.ServerHttpProtocol):
     def __init__(self, dispatch_functions, auth_token):
@@ -270,8 +288,10 @@ def main():
             'turn_display_on': lambda: c.turn_display_on(),
             'start_kodi': lambda: c.start_kodi(),
             'stop_kodi': lambda: c.stop_kodi(),
-            'play_video': lambda file, position: c.play_video(file, position)
-           }, os.environ.get('RPCSERVER_TOKEN')
+            'play_video': lambda file, position: c.play_video(file, position),
+            'stop_video': lambda file: c.stop_video(file)
+
+          }, os.environ.get('RPCSERVER_TOKEN')
         ),
         args.host, args.port,
         ssl = sslcontext)
