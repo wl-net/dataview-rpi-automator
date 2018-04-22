@@ -137,7 +137,7 @@ class DataviewRaspberryPiAutomator(object):
     position_str = '{},{},{},{}'.format(position['x1'], position['y1'], position['x2'], position['y2'])
 
     # TODO: ensure file exists
-    self.omxplayer = subprocess.Popen(['/usr/bin/omxplayer', '--win', position_str, url], shell=False)
+    self.omxplayer = subprocess.Popen(['/usr/bin/omxplayer', '--win', position_str, file], shell=False)
 
     return True
 
