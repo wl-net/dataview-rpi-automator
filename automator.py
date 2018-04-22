@@ -76,7 +76,7 @@ class DataviewRaspberryPiAutomator(object):
 
   def unmute(self):
     """
-    Unmutes the pulseaudio mixe
+    Unmutes the pulseaudio mixer.
     :return: Whether or not unmute was successful
     """
     subprocess.Popen(['sudo', '-u', 'pulse', 'sh', '-c', 'amixer set Master unmute'],
@@ -127,6 +127,18 @@ class DataviewRaspberryPiAutomator(object):
       subprocess.Popen('sudo chvt 1 && sudo chvt 7', shell=True)
     else:
       return False
+    return True
+
+  def play_video(self, file, position=None):
+    """
+    Plays a video
+    :return: Whether or not the video could be played
+    """
+    position_str = '{},{},{},{}'.format(position['x1'], position['y1'], position['x2'], position['y2'])
+
+    # TODO: ensure file exists
+    self.omxplayer = subprocess.Popen(['/usr/bin/omxplayer', '--win', position_str, url], shell=False)
+
     return True
 
 
@@ -258,6 +270,7 @@ def main():
             'turn_display_on': lambda: c.turn_display_on(),
             'start_kodi': lambda: c.start_kodi(),
             'stop_kodi': lambda: c.stop_kodi(),
+            'play_video': lambda file, position: c.play_video(file, position)
            }, os.environ.get('RPCSERVER_TOKEN')
         ),
         args.host, args.port,
