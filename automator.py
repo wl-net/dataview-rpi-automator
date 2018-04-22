@@ -153,7 +153,7 @@ class DataviewRaspberryPiAutomator(object):
 
       for pid in output:
         with open('/proc/{}/cmdline'.format(pid), 'r') as cmdline:
-          if cmdline.read().split('\x00').contains(file):
+          if file in cmdline.read().split('\x00'):
             print('kill {}'.format(pid))
             os.killpg(int(pid), signal.SIGTERM)
     except subprocess.CalledProcessError:
