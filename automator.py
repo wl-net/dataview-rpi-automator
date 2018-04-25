@@ -164,14 +164,18 @@ class DataviewRaspberryPiAutomator(object):
     Starts the motion daemon.
     """
 
-    subprocess.Popen("/usr/bin/sudo /bin/systemctl start motion", shell=True)
+    subprocess.Popen("sudo /bin/systemctl start motion", shell=True)
+
+    return True
 
   def stop_motion(self):
     """
     Stops the motion daemon.
     """
 
-    subprocess.Popen("/usr/bin/sudo /bin/systemctl stop motion", shell=True)
+    subprocess.Popen("sudo /bin/systemctl stop motion", shell=True)
+
+    return True
 
 
 class DataviewRPCServer(aiohttp.server.ServerHttpProtocol):
