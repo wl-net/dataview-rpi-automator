@@ -159,6 +159,20 @@ class DataviewRaspberryPiAutomator(object):
     except subprocess.CalledProcessError:
       pass
 
+  def start_motion(self):
+    """
+    Starts the motion daemon.
+    """
+
+    subprocess.Popen("/usr/bin/sudo /bin/systemctl start motion", shell=True)
+
+  def stop_motion(self):
+    """
+    Stops the motion daemon.
+    """
+
+    subprocess.Popen("/usr/bin/sudo /bin/systemctl stop motion", shell=True)
+
 
 class DataviewRPCServer(aiohttp.server.ServerHttpProtocol):
     def __init__(self, dispatch_functions, auth_token):
@@ -289,8 +303,9 @@ def main():
             'start_kodi': lambda: c.start_kodi(),
             'stop_kodi': lambda: c.stop_kodi(),
             'play_video': lambda file, position: c.play_video(file, position),
-            'stop_video': lambda file: c.stop_video(file)
-
+            'stop_video': lambda file: c.stop_video(file),
+            'start_motion': lambda: c.start_motion(),
+            'stop_motion': lambda: c.stop_motion(),
           }, os.environ.get('RPCSERVER_TOKEN')
         ),
         args.host, args.port,
