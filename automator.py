@@ -60,9 +60,9 @@ class DataviewRaspberryPiAutomator(object):
     """
     self.display_should_be_on = True
 
-    display_on = 'state 0x120002 [TV is off]' not in subprocess.check_output(['tvservice', '-s']).decode('utf-8')
+    display_off = 'state 0x120002 [TV is off]'  in subprocess.check_output(['tvservice', '-s']).decode('utf-8')
 
-    if display_on:
+    if display_off:
       subprocess.Popen("/usr/bin/tvservice -p", shell=True, stdout=subprocess.PIPE).stdout.read()
       subprocess.Popen("sudo /bin/chvt 1", shell=True, stdout=subprocess.PIPE).stdout.read()
       subprocess.Popen("sudo /bin/chvt 7", shell=True, stdout=subprocess.PIPE).stdout.read()
