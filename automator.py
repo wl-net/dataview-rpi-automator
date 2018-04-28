@@ -43,7 +43,7 @@ class DataviewRaspberryPiAutomator(object):
 
   def turn_display_off(self, force=False):
     """
-    Pause the audio stream.
+    Turns off the display.
     """
     self.display_should_be_on = False
 
@@ -56,13 +56,16 @@ class DataviewRaspberryPiAutomator(object):
 
   def turn_display_on(self):
     """
-    Sets the volume for the current player instance
+    Turns on the display.
     """
     self.display_should_be_on = True
 
-    subprocess.Popen("/usr/bin/tvservice -p", shell=True, stdout=subprocess.PIPE).stdout.read()
-    subprocess.Popen("sudo /bin/chvt 1", shell=True, stdout=subprocess.PIPE).stdout.read()
-    subprocess.Popen("sudo /bin/chvt 7", shell=True, stdout=subprocess.PIPE).stdout.read()
+    display_on = 'state 0x120002 [TV is off]' not in subprocess.check_output(['tvservice', '-s'])
+
+    if display_on:
+      subprocess.Popen("/usr/bin/tvservice -p", shell=True, stdout=subprocess.PIPE).stdout.read()
+      subprocess.Popen("sudo /bin/chvt 1", shell=True, stdout=subprocess.PIPE).stdout.read()
+      subprocess.Popen("sudo /bin/chvt 7", shell=True, stdout=subprocess.PIPE).stdout.read()
 
     return True
 
